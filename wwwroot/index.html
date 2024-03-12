@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="js/Users.js"></script>
+</head>
+<body>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+        }
+
+        .main-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: #CCCCCC;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .main-content {
+            background: #FFFFFF;
+            width:100%;
+            height:100%;
+        }
+
+        .account-icon {
+            margin: 1rem;
+        }
+
+        .account-info {
+            margin: 1rem;
+        }
+
+        .icon-head {
+            max-width: 1.5rem;
+        }
+
+        .logout-btn {
+            border: 1px solid #FFFFFF;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .login-form{
+            display:flex;
+            flex-direction:column;
+        }
+
+        .account-part{
+            display:flex;
+            justify-content:center;
+            margin: 5rem;
+        }
+
+        .login-header {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .login-error {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: red;
+            font-style: italic;
+            max-width:12rem;
+        }
+
+        .form-elem {
+            padding: 0.2rem;
+        }
+
+        .form-input {
+            padding: 0.2rem;
+            border: 1px solid #0094ff;
+            border-radius: 3px;
+        }
+
+        .form-button {
+            margin: 1rem;
+            padding: 0.2rem;
+            border: 1px solid #00ffff;
+            background: #00FFFF;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .table-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height:60vh;
+            overflow-y:auto;
+        }
+
+        .table-head{
+            text-align:center;
+            font-size:14px;
+            font-weight:600;
+            border-bottom: 1px solid #808080;
+            padding: 0.2rem;
+        }
+
+        .table-row {
+            text-align: center;
+            font-size: 14px;
+            border-bottom: 1px solid #808080;
+            padding:0.2rem;
+            word-break:break-word;
+        }
+
+        .table-grid-row {
+            display: grid;
+            grid-template-columns: 10vw 10vw 10vw 10vw 20vw
+        }
+
+        .table-button {
+            margin: 0.1rem;
+            padding: 0.2rem;
+            border: 1px solid #00ffff;
+            background: #00FFFF;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .modal-background {
+            background: #CCCCCC;
+            opacity: 0.5;
+            top: 0px;
+            bottom:0px;
+            left:0px;
+            right:0px;
+            height: 100%;
+            position: absolute;
+            z-index: 1;
+        }
+
+        .register-modal {
+            justify-content: center;
+            margin: 2rem;
+            z-index: 2;
+            position: absolute;
+            top: 3rem;
+            left: 36vw;
+            background: white;
+            border: 1px solid #CCCCCC;
+            border-radius: 6px;
+            padding: 2rem;
+        }
+
+    </style>
+    <div id="mainContainer" class="main-container">
+        <div id="header" class="main-header">
+            <div class="account-icon">
+                <img src="icons/user-svgrepo-com.svg" class="icon-head" />
+            </div>
+            <div id="accountInfo" class="account-info">
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div id="accountPart" class="account-part">                
+                <form id="accountData" class="login-form">
+                    <div class="login-header">
+                        <span>
+                            Вход в аккаунт
+                        </span>
+                    </div>
+                    <div id="loginError" class="login-error" style="display:none;">                        
+                    </div>
+                    <div class="form-elem">
+                        <span>
+                            Логин
+                        </span>
+                    </div>
+                    <div class="form-elem">
+                        <input class="form-input" type="text" name="login" />
+                    </div>
+                    <div class="form-elem">
+                        <span>
+                            Пароль
+                        </span>
+                    </div>
+                    <div class="form-elem">
+                        <input class="form-input" type="password" name="password" />
+                    </div>
+                    <button class="form-button" type="button" onclick="loginUser()">Войти</button>
+                </form>
+            </div>
+
+            <div id="contentPart" style="display:none; ">
+                <div id="backModal" class="modal-background" style="display:none;"></div>   
+                <div id="editModal" class="register-modal" style="display:none;">
+                    <form id="userData" class="login-form">
+                        <div class="login-header">
+                            <span>
+                                Введите данные пользователя
+                            </span>
+                            <button type="button" class="logout-btn" onclick="hideUserModal()">
+                                X
+                            </button>
+                        </div>
+                        <div id="saveError" class="login-error" style="display:none;">
+                        </div>
+                        <input class="form-input" type="hidden" name="id" />
+                        <div class="form-elem">
+                            <span>
+                                Логин
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="text" name="login" />
+                        </div>
+                        <div class="form-elem">
+                            <span>
+                                Пароль
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="password" name="password" />
+                        </div>
+                        <div class="form-elem">
+                            <span>
+                                Фамилия
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="text" name="surname" />
+                        </div>
+                        <div class="form-elem">
+                            <span>
+                                Имя
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="text" name="firstName" />
+                        </div>
+                        <div class="form-elem">
+                            <span>
+                                Отчество
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="text" name="patronymic" />
+                        </div>
+                        <div class="form-elem">
+                            <span>
+                                Дата рождения
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="date" name="birthDate" />
+                        </div>
+                        <div class="form-elem">
+                            <span>
+                                Email
+                            </span>
+                        </div>
+                        <div class="form-elem">
+                            <input class="form-input" type="text" name="email" />
+                        </div>
+                        <div style="display:flex; flex-direction:row;">
+                            <button class="form-button" type="button" onclick="hideUserModal()">Отмена</button>
+                            <button class="form-button" type="button" onclick="saveUser()">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="tablePart" class="table-container">
+                    <div>
+                        <h1>Таблица пользователей</h1>
+                    </div>
+                    <div>
+                        <div id="headTable" class="table-grid-row">
+                            <div class="table-head">
+                                Логин
+                            </div>
+                            <div class="table-head">
+                                ФИО
+                            </div>
+                            <div class="table-head">
+                                Почта
+                            </div>
+                            <div class="table-head">
+                                Дата рождения
+                            </div>
+                            <div class="table-head">
+                                Активность
+                            </div>
+                        </div>   
+                        <div id="usersTable">
+                        </div>
+                    </div>    
+                    <div style="display:flex; flex-direction:row;">
+                        <button class="form-button" type="button" onclick="showUserModal()">Добавить пользователя</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        const tokenKey = "accessToken";
+        const loginKey = "loginName";
+        const getUsersUrl = "api/user/getUsers";
+        const getUserByIdUrl = "api/user/getUser?userId=--1";
+        const saveUserUrl = "api/user/saveUser";
+        const deleteUserUrl = "api/user/deleteUser?userId=--1";
+
+        window.onload = updatePage();       
+
+    </script>
+</body>
+</html>
